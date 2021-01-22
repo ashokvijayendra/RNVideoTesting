@@ -1,34 +1,40 @@
 
 import React, { useState, useRef } from 'react';
-import { StyleSheet, View, Platform, Text, PixelRatio, Image } from 'react-native';
+import { StyleSheet, View, Platform, Text, PixelRatio, Image, TouchableOpacity } from 'react-native';
 import Video, { TextTrackType } from 'react-native-video';
 
 
 
 const VideoPlayer = () => {
-    
+    const [showSubtitle, setShowSubtitle] = useState(false);
     // The video we will play on the player.
-    const video = "https://playback.video.meredithcorp.io/*/4660693479001.mp4";
+    const video = "https://n-www.walgreens.com/images/adaptive/video/ep/AMRAP-sesh.mp4";
    
     return (
       <View>
-          <Video
+                <TouchableOpacity
+            onPress={() =>  setShowSubtitle(!showSubtitle)}
+          >
+              <View style={{padding: 50}}>
+                <Text> CC {showSubtitle ? ' ON ' : ' OFF '} </Text>
+              </View>
+        </TouchableOpacity>
+        <Video
+          key={`${showSubtitle ? 'showingSubTitle' : 'noSubTitle'}`}
           resizeMode={'cover'}
           source={{ uri: video }}
           style={styles.backgroundVideo}
-          fullscreen={true}
-          textTracks={
-            [
+          textTracks={ showSubtitle ?  [
               {
                 title: 'abc',
                 language: 'en',
                 type: TextTrackType.VTT,
-                uri: "https://playback.video.meredithcorp.io/*/4660693479001.vtt",
+                uri: "https://walgreens-production.adobecqms.net/content/dam/images/adaptive/video/ep/vtt/AMRAP-sesh.vtt",
               },
-            ]}
+          ] : undefined }
           selectedTextTrack={{
-             type: 'title',
-             value: 'abc'
+            type:  showSubtitle  ? 'title' : 'disabled',
+            value: showSubtitle ? 'abc' : undefined
           }}
           />
         </View>
@@ -39,10 +45,10 @@ const VideoPlayer = () => {
 
 const App = () => {
   const [isSelected, setSelection] = useState(false);
-
+  const [showSubtitle, setShowSubtitle] = useState(false);
   return (
     <View style={styles.container}>
-      <Text> hii </Text>
+
       <VideoPlayer />
    </View>
   );
